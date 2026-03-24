@@ -1,12 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import { fileURLToPath } from "node:url";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export default defineConfig(({ mode }) => ({
   base: mode === 'production' ? '/GUIA-SOCORRO/' : '/',
-  root: process.cwd(),
+  // Always resolve index.html + /src relative to this config (not the shell cwd)
+  root: __dirname,
   server: {
     host: "::",
     port: 8080,
