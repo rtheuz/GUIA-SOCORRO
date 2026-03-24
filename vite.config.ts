@@ -1,56 +1,35 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
-import { VitePWA } from "vite-plugin-pwa";
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>GUIA SOCORRO - Informação que salva vidas</title>
+    <meta name="description" content="Guia de emergência médica e localização de serviços de saúde em Santo André - SP. Funciona offline." />
+    <meta name="author" content="GUIA SOCORRO" />
+    <meta name="theme-color" content="#c40000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="GUIA SOCORRO" />
 
-export default defineConfig(({ mode }) => ({
-  // 1. FIXED: Change this from the full URL to just the repo path
-  base: mode === 'production' ? '/GUIA-SOCORRO/' : '/',
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
-  server: {
-    host: "::",
-    port: 8080,
-    allowedHosts: ['https://curvy-singers-fry.loca.lt/'], 
-    hmr: {
-      overlay: false,
-    },
-  },
-  plugins: [
-    react(),
-    mode === "development" && componentTagger(),
-    VitePWA({
-      registerType: "autoUpdate",
-      includeAssets: ["favicon.png", "icons/icon-192.png", "icons/icon-512.png"],
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,json,woff2}"],
-        navigateFallbackDenylist: [/^\/~oauth/],
-        runtimeCaching: [
-          // ... your existing runtimeCaching config ...
-        ],
-      },
-      manifest: {
-        name: "GUIA SOCORRO",
-        short_name: "GUIA SOCORRO",
-        description: "Guia de emergência médica e localização de serviços de saúde em Santo André - SP",
-        theme_color: "#c40000",
-        background_color: "#ffffff",
-        display: "standalone",
-        orientation: "portrait",
-        // 2. FIXED: Use relative path for start_url
-        start_url: "./index.html", 
-        icons: [
-          // 3. FIXED: Remove leading slashes from icon paths
-          { src: "icons/icon-192.png", sizes: "192x192", type: "image/png" },
-          { src: "icons/icon-512.png", sizes: "512x512", type: "image/png" },
-          { src: "icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
-        ],
-      },
-    }),
-  ].filter(Boolean),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-}));
+    <meta property="og:title" content="GUIA SOCORRO" />
+    <meta property="og:description" content="Guia de emergência médica e localização de serviços de saúde em Santo André - SP." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/icons/icon-512.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GUIA SOCORRO" />
+    <meta name="twitter:image" content="/icons/icon-512.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/main.tsx"></script>
+  </body>
+</html>
