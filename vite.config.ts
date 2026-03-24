@@ -5,6 +5,7 @@ import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? 'https://github.com/rtheuz/GUIA-SOCORRO' : '/',
   server: {
     host: "::",
     port: 8080,
