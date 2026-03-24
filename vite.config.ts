@@ -19,7 +19,6 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === "development" && componentTagger(),
     VitePWA({
-      base: mode === 'production' ? '/GUIA-SOCORRO/' : '/',
       registerType: "autoUpdate",
       includeAssets: ["favicon.png", "icons/icon-192.png", "icons/icon-512.png"],
       workbox: {
