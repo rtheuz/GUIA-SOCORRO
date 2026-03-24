@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    allowedHosts: ['https://curvy-singers-fry.loca.lt/'], 
+    allowedHosts: ['https://curvy-singers-fry.loca.lt/'],
     hmr: {
       overlay: false,
     },
@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === "development" && componentTagger(),
     VitePWA({
+      base: "/GUIA-SOCORRO/",
       registerType: "autoUpdate",
       includeAssets: ["favicon.png", "icons/icon-192.png", "icons/icon-512.png"],
       workbox: {
@@ -51,11 +52,27 @@ export default defineConfig(({ mode }) => ({
         background_color: "#ffffff",
         display: "standalone",
         orientation: "portrait",
-        start_url: "/",
+
+        // ✅ correct for GitHub Pages
+        start_url: "/GUIA-SOCORRO/",
+
         icons: [
-          { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-          { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-          { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+          {
+            src: "icons/icon-192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "icons/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+          {
+            src: "icons/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
+          },
         ],
       },
     }),
