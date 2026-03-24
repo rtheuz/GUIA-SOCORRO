@@ -5,7 +5,9 @@ import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? 'https://github.com/rtheuz/GUIA-SOCORRO' : '/',
+  // 1. FIXED: Change this from the full URL to just the repo path
+  base: mode === 'production' ? '/GUIA-SOCORRO/' : '/',
+
   server: {
     host: "::",
     port: 8080,
@@ -24,24 +26,7 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ["**/*.{js,css,html,ico,png,svg,json,woff2}"],
         navigateFallbackDenylist: [/^\/~oauth/],
         runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-cache",
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "gstatic-fonts-cache",
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
+          // ... your existing runtimeCaching config ...
         ],
       },
       manifest: {
@@ -52,11 +37,13 @@ export default defineConfig(({ mode }) => ({
         background_color: "#ffffff",
         display: "standalone",
         orientation: "portrait",
-        start_url: "/",
+        // 2. FIXED: Use relative path for start_url
+        start_url: "./index.html", 
         icons: [
-          { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-          { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-          { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+          // 3. FIXED: Remove leading slashes from icon paths
+          { src: "icons/icon-192.png", sizes: "192x192", type: "image/png" },
+          { src: "icons/icon-512.png", sizes: "512x512", type: "image/png" },
+          { src: "icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
         ],
       },
     }),
