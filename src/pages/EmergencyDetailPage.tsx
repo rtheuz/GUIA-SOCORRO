@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { Phone, XCircle, AlertTriangle } from "lucide-react";
+import { Phone, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { emergencyGuides } from "@/data/emergency-guides";
 
@@ -47,6 +47,24 @@ const EmergencyDetailPage = () => {
               </li>
             ))}
           </ul>
+        </section>
+
+        {/* O que fazer */}
+        <section className="p-4 bg-accent/10 rounded-xl border border-accent/30">
+          <h3 className="flex items-center gap-2 text-base font-bold text-accent mb-3">
+            <CheckCircle2 className="w-5 h-5" />
+            O que fazer
+          </h3>
+          <ol className="space-y-3">
+            {guide.doList.map((item, i) => (
+              <li key={i} className="flex items-start gap-3 text-sm text-foreground">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-accent text-accent-foreground text-xs font-bold flex-shrink-0">
+                  {i + 1}
+                </span>
+                {item}
+              </li>
+            ))}
+          </ol>
         </section>
 
         {/* O que NÃO fazer */}

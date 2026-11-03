@@ -12,7 +12,7 @@ await page.getByRole('button',{name:/UBS \/ UPA/}).click();
 await page.getByRole('button',{name:'Voltar'}).click();
 if(await page.getByLabel('Abrindo Guia Socorro').count()) throw new Error('A introdução voltou a aparecer');
 await page.goto(`${base}/emergencia/engasgo`);
-if(await page.getByRole('heading',{name:'O que fazer',exact:true}).count()) throw new Error('A seção O que fazer ainda está visível');
+await page.getByRole('heading',{name:'O que fazer',exact:true}).waitFor();
 await page.goto(`${base}/unidades`);
 await page.evaluate(()=>navigator.serviceWorker.ready);
 await page.getByLabel('Buscar por nome, rua ou bairro').fill('UPA Perimetral');
