@@ -1,139 +1,56 @@
-import { useState, useEffect } from "react";
-import { MapPin, Phone, Navigation, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { MapPin, Phone, Navigation } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
-import { healthUnits, haversineDistance, type HealthUnit } from "@/data/health-units";
-
-interface UnitWithDistance extends HealthUnit {
-  distance: number | null;
-}
+import { healthUnits } from "@/data/health-units";
 
 const HealthUnitsPage = () => {
-  const [units, setUnits] = useState<UnitWithDistance[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [locationError, setLocationError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "UBS" | "UPA">("all");
-
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setUnits(healthUnits.map((u) => ({ ...u, distance: null })));
-      setLocationError("Geolocalização não suportada neste navegador.");
-      setLoading(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        const withDist = healthUnits
-          .map((u) => ({
-            ...u,
-            distance: haversineDistance(latitude, longitude, u.lat, u.lng),
-          }))
-          .sort((a, b) => a.distance - b.distance);
-        setUnits(withDist);
-        setLoading(false);
-      },
-      () => {
-        setUnits(healthUnits.map((u) => ({ ...u, distance: null })));
-        setLocationError("Não foi possível obter sua localização.");
-        setLoading(false);
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  }, []);
-
-  const filtered = filter === "all" ? units : units.filter((u) => u.type === filter);
+  const [search, setSearch] = useState("");
+  const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const filtered = healthUnits.filter((unit) =>
+    (filter === "all" || unit.type === filter) &&
+    normalize(`${unit.name} ${unit.address}`).includes(normalize(search.trim()))
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <AppHeader title="UBS / UPA Próximas" showBack />
-
+      <AppHeader title="Unidades de saúde" showBack />
       <main className="flex-1 p-4">
-        {/* Filter tabs */}
-        <div className="flex gap-2 mb-4">
+        <label htmlFor="unit-search" className="block text-sm font-semibold mb-1">Buscar por nome, rua ou bairro</label>
+        <input id="unit-search" type="search" value={search} onChange={(event) => setSearch(event.target.value)}
+          placeholder="Ex.: Vila Luzita" className="w-full mb-4 p-3 rounded-lg border border-border bg-background text-foreground" />
+        <div className="flex gap-2 mb-4" aria-label="Filtrar unidades">
           {(["all", "UBS", "UPA"] as const).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-colors ${
-                filter === f
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground"
-              }`}
-            >
+            <button key={f} onClick={() => setFilter(f)} aria-pressed={filter === f}
+              className={`flex-1 py-2.5 rounded-lg text-sm font-bold ${filter === f ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
               {f === "all" ? "Todas" : f}
             </button>
           ))}
         </div>
-
-        {locationError && (
-          <div className="mb-4 p-3 bg-surface rounded-lg text-sm text-muted-foreground">
-            ⚠️ {locationError}
-          </div>
-        )}
-
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <Loader2 className="w-8 h-8 text-primary animate-spin" />
-            <p className="text-sm text-muted-foreground">Obtendo sua localização...</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {filtered.map((unit) => (
-              <div
-                key={unit.id}
-                className="p-4 bg-card rounded-xl border border-border shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className={`px-2 py-0.5 rounded text-xs font-bold ${
-                          unit.type === "UPA"
-                            ? "bg-primary/10 text-primary"
-                            : "bg-accent/10 text-accent"
-                        }`}
-                      >
-                        {unit.type}
-                      </span>
-                      {unit.distance !== null && (
-                        <span className="text-xs text-muted-foreground font-medium">
-                          {unit.distance < 1
-                            ? `${Math.round(unit.distance * 1000)}m`
-                            : `${unit.distance.toFixed(1)} km`}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-bold text-foreground">{unit.name}</h3>
-                    <p className="text-xs text-muted-foreground mt-1 flex items-start gap-1">
-                      <MapPin className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                      {unit.address}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-2 mt-3">
-                  <a
-                    href={`tel:${unit.phone.replace(/\D/g, "")}`}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold active:opacity-80 transition-opacity"
-                  >
-                    <Phone className="w-4 h-4" />
-                    Ligar
-                  </a>
-                  <a
-                    href={`https://www.google.com/maps/dir/?api=1&destination=${unit.lat},${unit.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-accent text-accent-foreground text-sm font-semibold active:opacity-80 transition-opacity"
-                  >
-                    <Navigation className="w-4 h-4" />
-                    Ver Rota
-                  </a>
-                </div>
+        <p className="mb-4 p-3 bg-surface rounded-lg text-sm text-muted-foreground">
+          Endereços e telefones da Prefeitura, consultados em 03/11/2026. A situação pode mudar; confirme antes de sair. Clínicas da família e policlínicas estão no filtro UBS; o PA está no filtro UPA.
+        </p>
+        <div className="flex flex-col gap-3">
+          {filtered.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma unidade encontrada. Tente outro nome ou bairro.</p>}
+          {filtered.map((unit) => (
+            <div key={unit.name} className="p-4 bg-card rounded-xl border border-border shadow-sm">
+              <span className="px-2 py-0.5 rounded text-xs font-bold bg-primary/10 text-primary">{unit.name.startsWith("PA ") ? "PA" : unit.type}</span>
+              <h3 className="font-bold text-foreground mt-1">{unit.name}</h3>
+              {unit.status && <p className="text-sm font-bold text-primary mt-1">{unit.status}</p>}
+              <p className="text-sm text-muted-foreground mt-1 flex items-start gap-1">
+                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />{unit.address}
+              </p>
+              <div className="flex gap-2 mt-3">
+                <a href={`tel:${unit.phone.replace(/\D/g, "")}`} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold">
+                  <Phone className="w-4 h-4" /> Ligar
+                </a>
+                {!unit.status?.includes("fechada") && <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${unit.name}, ${unit.address}`)}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-accent text-accent-foreground text-sm font-semibold">
+                  <Navigation className="w-4 h-4" /> Mapa online
+                </a>}
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </main>
     </div>
   );

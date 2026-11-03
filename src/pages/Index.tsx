@@ -16,8 +16,8 @@ const menuItems = [
   },
   {
     id: "units",
-    label: "UBS / UPA Mais Próxima",
-    sublabel: "Localizar unidade de saúde",
+    label: "UBS / UPA",
+    sublabel: "Buscar unidade de saúde",
     icon: MapPin,
     path: "/unidades",
     color: "bg-secondary text-secondary-foreground",

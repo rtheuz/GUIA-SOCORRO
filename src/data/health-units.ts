@@ -1,145 +1,60 @@
+// Fontes consultadas em 03/11/2026:
+// https://portais.santoandre.sp.gov.br/saude/unidades-basicas/
+// https://portais.santoandre.sp.gov.br/saude/urgencia-e-emergencia/
 export interface HealthUnit {
-  id: string;
   name: string;
   type: "UBS" | "UPA";
   address: string;
-  lat: number;
-  lng: number;
   phone: string;
+  status?: string;
 }
 
-export const healthUnits: HealthUnit[] = [
-  // UPAs de Santo André
-  {
-    id: "upa-central",
-    name: "UPA Central",
-    type: "UPA",
-    address: "R. das Figueiras, 1100 - Centro, Santo André - SP",
-    lat: -23.6544,
-    lng: -46.5322,
-    phone: "(11) 4433-1000"
-  },
-  {
-    id: "upa-jardim-santo-andre",
-    name: "UPA Jardim Santo André",
-    type: "UPA",
-    address: "Estr. do Pedroso, 5500 - Jardim Santo André, Santo André - SP",
-    lat: -23.6937,
-    lng: -46.4900,
-    phone: "(11) 4458-2300"
-  },
-  {
-    id: "upa-vila-luzita",
-    name: "UPA Vila Luzita",
-    type: "UPA",
-    address: "Av. Dom Pedro II, 3450 - Vila Luzita, Santo André - SP",
-    lat: -23.6743,
-    lng: -46.5087,
-    phone: "(11) 4990-8200"
-  },
-  // UBSs de Santo André
-  {
-    id: "ubs-santa-teresinha",
-    name: "UBS Santa Teresinha",
-    type: "UBS",
-    address: "R. Pará, 66 - Santa Teresinha, Santo André - SP",
-    lat: -23.6413,
-    lng: -46.5400,
-    phone: "(11) 4438-6969"
-  },
-  {
-    id: "ubs-bangu",
-    name: "UBS Bangu",
-    type: "UBS",
-    address: "R. Bangu, 500 - Bangu, Santo André - SP",
-    lat: -23.6530,
-    lng: -46.5486,
-    phone: "(11) 4991-2373"
-  },
-  {
-    id: "ubs-camilopolis",
-    name: "UBS Camilópolis",
-    type: "UBS",
-    address: "R. Alfredo Maluf, 100 - Camilópolis, Santo André - SP",
-    lat: -23.6375,
-    lng: -46.5239,
-    phone: "(11) 4458-2033"
-  },
-  {
-    id: "ubs-vila-palmares",
-    name: "UBS Vila Palmares",
-    type: "UBS",
-    address: "R. Luís Gama, 270 - Vila Palmares, Santo André - SP",
-    lat: -23.6493,
-    lng: -46.5585,
-    phone: "(11) 4992-2122"
-  },
-  {
-    id: "ubs-jardim-utinga",
-    name: "UBS Jardim Utinga",
-    type: "UBS",
-    address: "R. Visc. de Taunay, 694 - Jardim Utinga, Santo André - SP",
-    lat: -23.6385,
-    lng: -46.5530,
-    phone: "(11) 4994-3211"
-  },
-  {
-    id: "ubs-parque-novo-oratorio",
-    name: "UBS Parque Novo Oratório",
-    type: "UBS",
-    address: "R. Jurubatuba, 1500 - Parque Novo Oratório, Santo André - SP",
-    lat: -23.6675,
-    lng: -46.5140,
-    phone: "(11) 4458-5100"
-  },
-  {
-    id: "ubs-vila-assuncao",
-    name: "UBS Vila Assunção",
-    type: "UBS",
-    address: "R. Oratório, 540 - Vila Assunção, Santo André - SP",
-    lat: -23.6610,
-    lng: -46.5295,
-    phone: "(11) 4991-6322"
-  },
-  {
-    id: "ubs-parque-das-nacoes",
-    name: "UBS Parque das Nações",
-    type: "UBS",
-    address: "R. Xingu, 100 - Parque das Nações, Santo André - SP",
-    lat: -23.6483,
-    lng: -46.5190,
-    phone: "(11) 4972-1100"
-  },
-  {
-    id: "ubs-vila-guiomar",
-    name: "UBS Vila Guiomar",
-    type: "UBS",
-    address: "R. Marechal Deodoro, 900 - Vila Guiomar, Santo André - SP",
-    lat: -23.6500,
-    lng: -46.5420,
-    phone: "(11) 4436-4455"
-  }
+// Coordenadas serão adicionadas somente após validação.
+const records: [string, HealthUnit["type"], string, string, string?][] = [
+  ["UPA Bangu", "UPA", "Rua Avaré, 107 – Vila São Pedro", "4997-4211"],
+  ["UPA Central", "UPA", "Praça IV Centenário, 8 – Centro", "4436-6844", "Em reforma – fechada"],
+  ["UPA Faisa", "UPA", "Rua Adolfo Bastos, 25 – Vila Bastos", "4436-6844", "Em reforma – fechada"],
+  ["UPA Jardim Santo André", "UPA", "Rua Tom Jobim, 396 – Jardim Santo André", "4422-4560"],
+  ["UPA Perimetral", "UPA", "Rua Cel. Agenor de Camargo, 129 – Vila Assunção", "4435-1400"],
+  ["UPA Sacadura Cabral", "UPA", "Rua Lauro Muller, 354 – Vila Sacadura Cabral", "4421-1224"],
+  ["UPA Vila Luzita", "UPA", "Rua Calecute, 25 – Vila Luzita", "4453-5119"],
+  ["PA Paranapiacaba", "UPA", "Avenida Ford, s/nº – Paranapiacaba", "4439-0299"],
+  ["Policlínica Centro", "UBS", "Rua Xavier de Toledo, 517 – Centro", "4422-9519"],
+  ["Policlínica Parque João Ramalho", "UBS", "Rua Maragogipe, s/nº – Parque João Ramalho", "4435-1450"],
+  ["Policlínica Vila Helena", "UBS", "Avenida Andrade Neves, 1.082 – Vila Helena", "4435-1394"],
+  ["Clínica da Família Jardim Ana Maria", "UBS", "Rua Otávio Mangabeira, 331 – Jardim Ana Maria", "4435-1358"],
+  ["Clínica da Família Jardim Carla", "UBS", "Rua José de Alencar, s/nº – Jardim Carla", "4435-1391"],
+  ["Clínica da Família Jardim Santo Alberto", "UBS", "Rua Almada, 745 – Jardim Santo Alberto", "4435-1355"],
+  ["Clínica da Família Jardim Santo André", "UBS", "Rua Tom Jobim, 660 – Jardim Santo André", "4435-1471"],
+  ["Clínica da Família Jardim Sorocaba", "UBS", "Avenida Sorocaba, 935/945 – Jardim Sorocaba", "4435-1360"],
+  ["Clínica da Família Recreio da Borda do Campo", "UBS", "Avenida Mico Leão Dourado, 2.452 (esquina com Rua Guariba) – Recreio da Borda do Campo", "4435-1467"],
+  ["Clínica da Família Valparaíso", "UBS", "Rua Andradina, 471 – Vila Valparaíso", "4435-1487"],
+  ["Clínica da Família Vila Linda", "UBS", "Rua Embaré, 97 (esquina com Rua Ingá) – Vila Linda", "4435-1350", "Em reforma – fechada"],
+  ["Clínica da Família Capuava – Centro de Saúde Escola", "UBS", "Rua Irlanda, 700 – Parque Capuava", "4435-1363"],
+  ["Clínica da Família São Jorge", "UBS", "Avenida São Paulo, 800 – Cidade São Jorge", "4435-1478"],
+  ["Dr. Moysés Fucs", "UBS", "Rua Alexandreta, 180 – Jardim Santo Antônio", "4435-1373", "Em reforma – com atendimento"],
+  ["Clínica da Família Jardim Alvorada", "UBS", "Rua Dr. Almenor Jardim Silveira, s/nº – Jardim Alvorada", "4435-1455"],
+  ["Clínica da Família Jardim Irene", "UBS", "Estrada da Cata Preta, 552 – Jardim Irene", "4435-1462"],
+  ["Clínica da Família Jardim Marek", "UBS", "Rua Eng. Alfred Heitzman Júnior, s/nº – Jardim Marek", "4435-1388"],
+  ["Clínica da Família Utinga", "UBS", "Alameda México, s/nº – Vila Metalúrgica", "4435-1376"],
+  ["Clínica da Família Vila Guiomar", "UBS", "Rua das Silveiras, 73 – Vila Guiomar", "4435-1483"],
+  ["Clínica da Família Vila Luzita", "UBS", "Avenida Dom Pedro I, 4.197 – Vila Luzita", "4435-1474"],
+  ["Clínica da Família Alzira Franco", "UBS", "Rua Asa Branca, s/nº (esquina com Rua Horizonte Azul) – Jardim Alzira Franco", "4435-1315"],
+  ["Clínica da Família Jardim Cipreste", "UBS", "Rua Caminho dos Vianas, 300 – Jardim Cipreste", "4435-1459"],
+  ["Clínica da Família Paranapiacaba", "UBS", "Avenida Ford, s/nº – Paranapiacaba", "4422-9510"],
+  ["Clínica da Família Parque Andreense", "UBS", "Avenida Ibertioga, s/nº – Parque Andreense", "4422-9512"],
+  ["Clínica da Família Parque Miami", "UBS", "Estrada do Pedroso, 5.151 – Parque Miami", "4435-1465"],
+  ["Clínica da Família Cruzado – Sylvia Augusta dos Santos", "UBS", "Rua dos Vicentinhos, 335 – Jardim Santo André", "4435-1310"],
+  ["Policlínica Bairro Paraíso", "UBS", "Rua Juquiá, 256 – Bairro Paraíso", "4422-9522"],
+  ["Policlínica Campestre", "UBS", "Rua das Figueiras, 2.716 – Bairro Campestre", "4435-1492"],
+  ["Policlínica Humaitá", "UBS", "Rua Fernando de Mascarenhas, 191 – Vila Humaitá", "4422-4814"],
+  ["Policlínica Jardim Bom Pastor", "UBS", "Rua José D’Ângelo, 35 – Jardim Bom Pastor", "4422-9532"],
+  ["Policlínica Parque das Nações", "UBS", "Praça Waldemar Soares, s/nº – Parque das Nações", "4435-1367"],
+  ["Policlínica Parque Novo Oratório", "UBS", "Rua Tunísia, s/nº – Parque Novo Oratório", "4422-4800"],
+  ["Policlínica Vila Lucinda", "UBS", "Rua Caconde, s/nº (em frente à Praça Heliópolis) – Vila Lucinda", "4435-1370"],
+  ["Policlínica Vila Palmares", "UBS", "Praça Áurea, 234 – Vila Palmares", "4435-1481"],
 ];
 
-/**
- * Calcula a distância entre dois pontos usando a fórmula de Haversine
- * @returns distância em quilômetros
- */
-export function haversineDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
-  const R = 6371; // Raio da Terra em km
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
+export const healthUnits: HealthUnit[] = records.map(([name, type, address, phone, status]) => ({
+  name, type, address: `${address} – Santo André, SP`, phone: `(11) ${phone}`, status,
+}));
