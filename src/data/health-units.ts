@@ -7,6 +7,7 @@ export interface HealthUnit {
   address: string;
   phone: string;
   status?: string;
+  coordinates?: [number, number];
 }
 
 // Coordenadas serão adicionadas somente após validação.
@@ -55,6 +56,41 @@ const records: [string, HealthUnit["type"], string, string, string?][] = [
   ["Policlínica Vila Palmares", "UBS", "Praça Áurea, 234 – Vila Palmares", "4435-1481"],
 ];
 
+// Pontos OSM ou CNES conferidos com fontes oficiais em 03/11/2026.
+// Pontos sem correspondência suficiente ficam sem rota até serem verificados.
+const coordinates: Record<string, [number, number]> = {
+  "UPA Bangu": [-23.6408368, -46.5278936],
+  "UPA Jardim Santo André": [-23.7072382, -46.4956189],
+  "UPA Perimetral": [-23.6631741, -46.5262511],
+  "UPA Vila Luzita": [-23.6993974, -46.5072951],
+  "Policlínica Centro": [-23.6619761, -46.5226713],
+  "Policlínica Parque João Ramalho": [-23.6466264, -46.5093223],
+  "Policlínica Vila Helena": [-23.6813910, -46.5141680],
+  "Clínica da Família Jardim Carla": [-23.6943980, -46.4948020],
+  "Clínica da Família Jardim Santo Alberto": [-23.6327017, -46.4945187],
+  "Clínica da Família Jardim Santo André": [-23.7072069, -46.4951393],
+  "Clínica da Família Valparaíso": [-23.6650111, -46.5494855],
+  "Clínica da Família Capuava – Centro de Saúde Escola": [-23.6399615, -46.4929710],
+  "Clínica da Família São Jorge": [-23.6700874, -46.4869493],
+  "Dr. Moysés Fucs": [-23.6275405, -46.5220088],
+  "Clínica da Família Jardim Alvorada": [-23.6960861, -46.5211467],
+  "Clínica da Família Vila Guiomar": [-23.6531726, -46.5460559],
+  "Clínica da Família Vila Luzita": [-23.7004662, -46.5047735],
+  "Clínica da Família Utinga": [-23.6250363, -46.5348536],
+  "Clínica da Família Jardim Cipreste": [-23.7143806, -46.5145913],
+  "Clínica da Família Parque Andreense": [-23.7588350, -46.4607880],
+  "Clínica da Família Parque Miami": [-23.7392542, -46.4958672],
+  "Clínica da Família Cruzado – Sylvia Augusta dos Santos": [-23.7104963, -46.4975137],
+  "Policlínica Bairro Paraíso": [-23.6805470, -46.5327662],
+  "Policlínica Campestre": [-23.6350010, -46.5478490],
+  "Policlínica Humaitá": [-23.6715217, -46.5033123],
+  "Policlínica Jardim Bom Pastor": [-23.6780836, -46.5525301],
+  "Policlínica Parque das Nações": [-23.6392495, -46.5193827],
+  "Policlínica Parque Novo Oratório": [-23.6300405, -46.5078141],
+  "Policlínica Vila Palmares": [-23.6518797, -46.5606565],
+};
+
 export const healthUnits: HealthUnit[] = records.map(([name, type, address, phone, status]) => ({
   name, type, address: `${address} – Santo André, SP`, phone: `(11) ${phone}`, status,
+  coordinates: coordinates[name],
 }));
