@@ -57,7 +57,8 @@ export default defineConfig(({ mode }) => ({
         background_color: "#ffffff",
         display: "standalone",
         orientation: "portrait",
-        start_url: "/GUIA-SOCORRO/",
+        start_url: "/",
+        scope: "/",
         icons: [
           {
             src: "icons/icon-192.png",

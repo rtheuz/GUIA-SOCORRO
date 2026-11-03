@@ -11,4 +11,8 @@ describe('rota para veículos',()=>{
   expect(findVehicleRoute(straight,[0,0],[0,0.002])?.points).toEqual([[0,0],[0,0.001],[0,0.002]]);
  });
  it('recusa pontos fora da malha',()=>expect(findVehicleRoute(data,[0.1,0.1],[0,0])).toBeNull());
+ it('procura uma rua conectada quando o ponto mais próximo está isolado',()=>{
+  const roads:VehicleRoadData={...data,nodes:[[1,0,0],[2,0,0.00005],[3,0,0.0002],[4,0,0.002]],ways:[{id:1,refs:[1,2],name:'Trecho isolado',kind:'service',oneway:0},{id:2,refs:[3,4],name:'Rua conectada',kind:'residential',oneway:0}],turns:[]};
+  expect(findVehicleRoute(roads,[0,0],[0,0.002])?.instructions.map(step=>step.name)).toEqual(['Rua conectada']);
+ });
 });

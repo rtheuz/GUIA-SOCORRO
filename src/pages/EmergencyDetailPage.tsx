@@ -56,7 +56,7 @@ const EmergencyDetailPage = () => {
             O que fazer
           </h3>
           <ol className="space-y-3">
-            {guide.doList.map((item, i) => (
+            {["Ligue 192 (SAMU) imediatamente"].map((item, i) => (
               <li key={i} className="flex items-start gap-3 text-sm text-foreground">
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-accent text-accent-foreground text-xs font-bold flex-shrink-0">
                   {i + 1}

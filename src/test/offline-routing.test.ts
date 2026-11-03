@@ -10,4 +10,8 @@ describe("rotas offline", () => {
   });
   it("não inventa conexões com ruas distantes", () => expect(findWalkingRoute(data,[0.1,0.1],[0,0])).toBeNull());
   it("não atravessa trechos sem dados", () => expect(findWalkingRoute({...data, ways:[{refs:[1,null,3],name:"",kind:"path"}]},[0,0],[0,0.002])).toBeNull());
+  it("procura uma rua conectada quando o ponto mais próximo está isolado", () => {
+    const roads:RoadData={...data,nodes:[[1,0,0],[2,0,0.00005],[3,0,0.0002],[4,0,0.002]],ways:[{refs:[1,2],name:"Trecho isolado",kind:"service"},{refs:[3,4],name:"Rua conectada",kind:"residential"}]};
+    expect(findWalkingRoute(roads,[0,0],[0,0.002])?.instructions.map(step=>step.name)).toEqual(["Rua conectada"]);
+  });
 });
