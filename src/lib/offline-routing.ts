@@ -1,6 +1,6 @@
 export type Point = [number, number];
 export type RoadData = { bounds: {south:number; north:number; west:number; east:number}; nodes: [number,number,number][]; ways: {refs:(number|null)[]; name:string; kind:string}[] };
-export type RoadRoute = { points: Point[]; distance: number; instructions: {name:string; distance:number}[] };
+export type RoadRoute = { points: Point[]; distance: number; instructions: {name:string; distance:number; pointIndex?:number}[] };
 const radians = (value:number) => value * Math.PI / 180;
 export function distance(a:Point, b:Point) {
   const dy=radians(b[0]-a[0]), dx=radians(b[1]-a[1]);
@@ -29,7 +29,7 @@ export function findWalkingRoute(data:RoadData, start:Point, destination:Point):
   if(!Number.isFinite(costs[to])) return null;
   const ids=[to], parts:{name:string;distance:number}[]=[]; let current=to;
   while(current!==from) {const edge=previousEdge[current], prior=previous[current];if(edge<0 || prior<0) return null;parts.push({name:data.ways[wayIndex[edge]].name || 'Via sem nome',distance:length[edge]});current=prior;ids.push(current);}
-  ids.reverse();parts.reverse();const instructions:{name:string;distance:number}[]=[];
-  for(const part of parts) {const prior=instructions[instructions.length-1];if(prior?.name===part.name) prior.distance+=part.distance;else instructions.push({...part});}
+  ids.reverse();parts.reverse();const instructions:{name:string;distance:number;pointIndex:number}[]=[];
+  parts.forEach((part,i)=>{const prior=instructions[instructions.length-1];if(prior?.name===part.name) prior.distance+=part.distance;else instructions.push({...part,pointIndex:i});});
   return {points:ids.map(i=>[data.nodes[i][1],data.nodes[i][2]]),distance:costs[to]+fromDistance+toDistance,instructions};
 }

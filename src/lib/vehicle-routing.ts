@@ -25,7 +25,7 @@ export function findVehicleRoute(data:VehicleRoadData,start:Point,destination:Po
  for(let e=head[from];e!==-1;e=next[e]){costs[e]=meters[e];heap.push([e,costs[e]]);}
  let found=-1;while(heap.data.length){const [e,cost]=heap.pop()!;if(cost!==costs[e])continue;const node=target[e];if(destinations.has(node)){found=e;break;}for(let candidate=head[node];candidate!==-1;candidate=next[candidate]){if(!allowed(e,candidate))continue;const value=cost+meters[candidate];if(value<costs[candidate]){costs[candidate]=value;previous[candidate]=e;heap.push([candidate,value]);}}}
  if(found<0)return null;
- const edges:number[]=[];for(let e=found;e!==-1;e=previous[e])edges.push(e);edges.reverse();const ids=[from,...edges.map(e=>target[e])];const instructions:{name:string;distance:number}[]=[];
- for(const edge of edges){const name=data.ways[wayIndex[edge]].name||'Via sem nome',last=instructions[instructions.length-1];if(last?.name===name)last.distance+=meters[edge];else instructions.push({name,distance:meters[edge]});}
+ const edges:number[]=[];for(let e=found;e!==-1;e=previous[e])edges.push(e);edges.reverse();const ids=[from,...edges.map(e=>target[e])];const instructions:{name:string;distance:number;pointIndex:number}[]=[];
+ edges.forEach((edge,i)=>{const name=data.ways[wayIndex[edge]].name||'Via sem nome',last=instructions[instructions.length-1];if(last?.name===name)last.distance+=meters[edge];else instructions.push({name,distance:meters[edge],pointIndex:i});});
  return {points:ids.map(i=>[data.nodes[i][1],data.nodes[i][2]]),distance:costs[found]+startGap+destinations.get(target[found])!,instructions};
 }

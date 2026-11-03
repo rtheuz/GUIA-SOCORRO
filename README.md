@@ -4,7 +4,7 @@ Aplicativo de consulta de primeiros socorros e unidades de saúde de Santo Andr�
 
 ## Navegação offline
 
-Na lista de unidades, os destinos com ponto conferido exibem “Rota offline”. Com internet, abra um deles, escolha carro ou caminhada e baixe o mapa correspondente. Depois, o aplicativo pode calcular a rota e acompanhar a posição pelo GPS sem conexão. O usuário pode recalcular ou atualizar o mapa quando estiver conectado. O navegador pode remover arquivos armazenados quando faltar espaço.
+Na lista de unidades, os destinos com ponto conferido exibem “Rota offline”. Com internet, abra um deles, escolha carro ou caminhada e baixe o mapa correspondente. Depois, o aplicativo calcula a rota sem conexão e apresenta o mapa em perspectiva, posição pelo GPS, direção e distância restante. Ao detectar afastamento da rota com sinal suficientemente preciso, tenta recalculá-la. O usuário também pode recalcular ou atualizar o mapa quando estiver conectado. O navegador pode remover arquivos armazenados quando faltar espaço.
 
 A rota de carro considera sentidos e restrições de conversão presentes no conjunto de dados; vias com restrições condicionais e conversões complexas não suportadas podem ser excluídas. A rota a pé pode incluir escadas. Não há trânsito ao vivo ou orientação por voz. Os dados podem estar incompletos: o trajeto é uma referência e não substitui a sinalização ou a observação das condições reais. As unidades sem posição suficientemente conferida continuam com endereço e telefone, sem botão de rota offline.
 
