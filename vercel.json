@@ -1,0 +1,4 @@
+{
+  "framework": "vite",
+  "rewrites": [{ "source": "/((?!assets/|icons/|sw\\.js|workbox-|manifest\\.).*)", "destination": "/index.html" }]
+}
