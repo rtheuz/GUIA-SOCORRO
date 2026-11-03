@@ -8,7 +8,7 @@ import { VitePWA } from "vite-plugin-pwa";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/GUIA-SOCORRO/' : '/',
+  base: '/',
   // Always resolve index.html + /src relative to this config (not the shell cwd)
   root: __dirname,
   server: {
@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => ({
       includeAssets: ["favicon.png", "icons/icon-192.png", "icons/icon-512.png"],
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,json,woff2}"],
+        globIgnores: ["**/roads-santo-andre.json"],
         navigateFallbackDenylist: [/^\/~oauth/],
         runtimeCaching: [
           {
