@@ -1,7 +1,5 @@
-import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart, MapPin, Calendar, Info, Phone } from "lucide-react";
-import IntroScreen from "@/components/IntroScreen";
 import InstallBanner from "@/components/InstallBanner";
 import AppHeader from "@/components/AppHeader";
 
@@ -47,17 +45,10 @@ const emergencyDials = [
 ];
 
 const Index = () => {
-  const [showIntro, setShowIntro] = useState(true);
   const navigate = useNavigate();
-
-  const handleIntroComplete = useCallback(() => {
-    setShowIntro(false);
-  }, []);
 
   return (
     <>
-      {showIntro && <IntroScreen onComplete={handleIntroComplete} />}
-
       <div className="flex flex-col min-h-screen bg-background">
         <AppHeader title="GUIA SOCORRO" />
 

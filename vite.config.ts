@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => ({
       includeAssets: ["favicon.png", "icons/icon-192.png", "icons/icon-512.png"],
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,json,woff2}"],
-        globIgnores: ["**/roads-santo-andre.json"],
+        globIgnores: ["**/roads-santo-andre.json", "**/roads-vehicles-santo-andre.json"],
         navigateFallbackDenylist: [/^\/~oauth/],
         runtimeCaching: [
           {

@@ -8,6 +8,7 @@ export interface HealthUnit {
   phone: string;
   status?: string;
   coordinates?: [number, number];
+  distanceCoordinates?: [number, number];
 }
 
 // Coordenadas serão adicionadas somente após validação.
@@ -56,28 +57,36 @@ const records: [string, HealthUnit["type"], string, string, string?][] = [
   ["Policlínica Vila Palmares", "UBS", "Praça Áurea, 234 – Vila Palmares", "4435-1481"],
 ];
 
-// Pontos OSM ou CNES conferidos com fontes oficiais em 03/11/2026.
+// Pontos conferidos com fontes oficiais, incluindo o mapa SIGA da Prefeitura.
 // Pontos sem correspondência suficiente ficam sem rota até serem verificados.
 const coordinates: Record<string, [number, number]> = {
   "UPA Bangu": [-23.6408368, -46.5278936],
+  "UPA Central": [-23.6572059, -46.5351011],
   "UPA Jardim Santo André": [-23.7072382, -46.4956189],
   "UPA Perimetral": [-23.6631741, -46.5262511],
+  "UPA Sacadura Cabral": [-23.65639202, -46.557663],
   "UPA Vila Luzita": [-23.6993974, -46.5072951],
+  "PA Paranapiacaba": [-23.77605457, -46.29915082],
   "Policlínica Centro": [-23.6619761, -46.5226713],
   "Policlínica Parque João Ramalho": [-23.6466264, -46.5093223],
   "Policlínica Vila Helena": [-23.6813910, -46.5141680],
   "Clínica da Família Jardim Carla": [-23.6943980, -46.4948020],
   "Clínica da Família Jardim Santo Alberto": [-23.6327017, -46.4945187],
   "Clínica da Família Jardim Santo André": [-23.7072069, -46.4951393],
+  "Clínica da Família Recreio da Borda do Campo": [-23.72975931, -46.48414419],
   "Clínica da Família Valparaíso": [-23.6650111, -46.5494855],
+  "Clínica da Família Vila Linda": [-23.68767426, -46.52100048],
   "Clínica da Família Capuava – Centro de Saúde Escola": [-23.6399615, -46.4929710],
   "Clínica da Família São Jorge": [-23.6700874, -46.4869493],
   "Dr. Moysés Fucs": [-23.6275405, -46.5220088],
   "Clínica da Família Jardim Alvorada": [-23.6960861, -46.5211467],
+  "Clínica da Família Jardim Irene": [-23.70953786, -46.5064058],
   "Clínica da Família Vila Guiomar": [-23.6531726, -46.5460559],
   "Clínica da Família Vila Luzita": [-23.7004662, -46.5047735],
   "Clínica da Família Utinga": [-23.6250363, -46.5348536],
   "Clínica da Família Jardim Cipreste": [-23.7143806, -46.5145913],
+  "Clínica da Família Alzira Franco": [-23.65243826, -46.49515567],
+  "Clínica da Família Paranapiacaba": [-23.77596102, -46.29914064],
   "Clínica da Família Parque Andreense": [-23.7588350, -46.4607880],
   "Clínica da Família Parque Miami": [-23.7392542, -46.4958672],
   "Clínica da Família Cruzado – Sylvia Augusta dos Santos": [-23.7104963, -46.4975137],
@@ -87,10 +96,21 @@ const coordinates: Record<string, [number, number]> = {
   "Policlínica Jardim Bom Pastor": [-23.6780836, -46.5525301],
   "Policlínica Parque das Nações": [-23.6392495, -46.5193827],
   "Policlínica Parque Novo Oratório": [-23.6300405, -46.5078141],
+  "Policlínica Vila Lucinda": [-23.62698512, -46.51590258],
   "Policlínica Vila Palmares": [-23.6518797, -46.5606565],
+};
+
+// Para locais com divergência entre fontes ou posição derivada do endereço,
+// usar somente para distância aproximada até confirmar a entrada.
+const approximateCoordinates: Record<string, [number, number]> = {
+  "Clínica da Família Jardim Ana Maria": [-23.62849007, -46.4911394],
+  "Clínica da Família Jardim Marek": [-23.67346243, -46.49216241],
+  "UPA Faisa": [-23.65699401, -46.53554397],
+  "Clínica da Família Jardim Sorocaba": [-23.64886897, -46.50485687],
 };
 
 export const healthUnits: HealthUnit[] = records.map(([name, type, address, phone, status]) => ({
   name, type, address: `${address} – Santo André, SP`, phone: `(11) ${phone}`, status,
   coordinates: coordinates[name],
+  distanceCoordinates: approximateCoordinates[name] ?? coordinates[name],
 }));

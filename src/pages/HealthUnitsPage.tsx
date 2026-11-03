@@ -1,19 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MapPin, Phone, Navigation } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { healthUnits } from "@/data/health-units";
 import type { HealthUnit } from "@/data/health-units";
 import OfflineNavigation from "@/components/OfflineNavigation";
+import { distance, type Point } from "@/lib/offline-routing";
 
 const HealthUnitsPage = () => {
   const [filter, setFilter] = useState<"all" | "UBS" | "UPA">("all");
   const [search, setSearch] = useState("");
   const [selectedUnit, setSelectedUnit] = useState<HealthUnit | null>(null);
+  const [position, setPosition] = useState<Point | null>(null);
+  const [locationError, setLocationError] = useState("");
+  useEffect(() => {
+    if (!navigator.geolocation) { setLocationError("Seu navegador não oferece localização."); return; }
+    const watch = navigator.geolocation.watchPosition(
+      ({coords}) => { setPosition([coords.latitude, coords.longitude]); setLocationError(""); },
+      () => setLocationError("Ative a localização para ver as unidades por distância."),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 15000}
+    );
+    return () => navigator.geolocation.clearWatch(watch);
+  }, []);
   const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   const filtered = healthUnits.filter((unit) =>
     (filter === "all" || unit.type === filter) &&
     normalize(`${unit.name} ${unit.address}`).includes(normalize(search.trim()))
-  );
+  ).map(unit => ({unit, meters: position && unit.distanceCoordinates ? distance(position, unit.distanceCoordinates) : null}))
+    .sort((a,b) => (a.meters ?? Infinity) - (b.meters ?? Infinity));
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -31,16 +44,15 @@ const HealthUnitsPage = () => {
             </button>
           ))}
         </div>
-        <p className="mb-4 p-3 bg-surface rounded-lg text-sm text-muted-foreground">
-          Endereços e telefones da Prefeitura, consultados em 03/11/2026. A situação pode mudar; confirme antes de sair. Clínicas da família e policlínicas estão no filtro UBS; o PA está no filtro UPA.
-        </p>
-        <p className="mb-4 text-sm text-muted-foreground">A rota offline a pé está disponível nas unidades com localização conferida. As demais continuam disponíveis para consulta de endereço e telefone.</p>
+        {locationError && <p role="status" className="mb-4 text-sm text-muted-foreground">{locationError}</p>}
+        <p className="mb-4 text-sm text-muted-foreground">A rota offline está disponível nas unidades com localização conferida.</p>
         <div className="flex flex-col gap-3">
           {filtered.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma unidade encontrada. Tente outro nome ou bairro.</p>}
-          {filtered.map((unit) => (
+          {filtered.map(({unit, meters}) => (
             <div key={unit.name} className="p-4 bg-card rounded-xl border border-border shadow-sm">
               <span className="px-2 py-0.5 rounded text-xs font-bold bg-primary/10 text-primary">{unit.name.startsWith("PA ") ? "PA" : unit.type}</span>
               <h3 className="font-bold text-foreground mt-1">{unit.name}</h3>
+              <p className="text-sm text-muted-foreground">{meters === null ? "Distância indisponível" : `${meters < 1000 ? `${Math.round(meters)} m` : `${(meters / 1000).toFixed(1)} km`} em linha reta`}</p>
               {unit.status && <p className="text-sm font-bold text-primary mt-1">{unit.status}</p>}
               <p className="text-sm text-muted-foreground mt-1 flex items-start gap-1">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />{unit.address}
@@ -53,7 +65,7 @@ const HealthUnitsPage = () => {
                   <Navigation className="w-4 h-4" /> Mapa online
                 </a>}
               </div>
-              {unit.coordinates && !unit.status?.includes("fechada") && <button onClick={() => setSelectedUnit(unit)} className="w-full mt-2 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold">Rota a pé offline</button>}
+              {unit.coordinates && !unit.status?.includes("fechada") && <button onClick={() => setSelectedUnit(unit)} className="w-full mt-2 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold">Rota offline</button>}
             </div>
           ))}
         </div>
