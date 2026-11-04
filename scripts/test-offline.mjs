@@ -35,7 +35,7 @@ await page.getByLabel('Buscar por nome, rua ou bairro').fill('UPA Perimetral');
 await page.getByRole('button',{name:'Rota offline'}).click();
 await page.getByText('Mapa disponível neste aparelho.').waitFor({timeout:20000});
 await page.getByRole('button',{name:'Calcular rota de carro'}).click();
-await page.getByText(/restantes/).waitFor({timeout:60000});
+await page.getByText(/restantes/).waitFor({timeout:60000}).catch(async error=>{console.error('TELA CARRO:',await page.locator('body').innerText());throw error;});
 console.log('CARRO OFFLINE APÓS RECARREGAR:',await page.getByText(/restantes/).innerText());
 console.log('MAPA:',await page.getByRole('img',{name:/Mapa de navegação/}).count());
 const map=page.getByRole('img',{name:/Mapa de navegação/});
@@ -46,7 +46,16 @@ await page.waitForFunction(old=>document.querySelector('canvas').toDataURL()!==o
 await page.getByRole('button',{name:'Ampliar mapa'}).click();
 await page.getByRole('button',{name:'2D / 3D',exact:true}).click();
 await page.getByRole('button',{name:'Minha posição',exact:true}).click();
-console.log('INTERAÇÃO: arrastar, zoom, perspectiva e recentralização');
+const cdp=await context.newCDPSession(page);
+await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:2});
+const beforeTouch=await map.evaluate(c=>c.toDataURL());
+await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:120,y:400,id:1},{x:220,y:400,id:2}]});
+await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:90,y:370,id:1},{x:260,y:430,id:2}]});
+await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+await page.getByRole('button',{name:'Minha posição',exact:true}).waitFor();
+await page.waitForFunction(old=>document.querySelector('canvas').toDataURL()!==old,beforeTouch);
+await page.getByRole('button',{name:'Minha posição',exact:true}).click();
+console.log('INTERAÇÃO: arrastar, pinça e rotação com dois dedos, zoom, perspectiva e recentralização');
 if(process.env.NAV_SCREENSHOT) await page.screenshot({path:process.env.NAV_SCREENSHOT});
 const before=await page.getByText(/restantes/).innerText();
 await context.setGeolocation({latitude:-23.6635,longitude:-46.5295,accuracy:15});
@@ -57,4 +66,6 @@ await page.waitForURL(`${base}/`,{timeout:10000});
 await page.getByRole('button',{name:/UBS \/ UPA/}).waitFor();
 console.log('ATALHO ANTIGO OFFLINE: redirecionado para a página inicial');
 await browser.close();
+
+
 
